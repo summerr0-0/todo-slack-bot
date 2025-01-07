@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@utils/*": ["src/utils/*"],
+      "@services/*": ["src/services/*"],
+      "@handlers/*": ["src/handlers/*"],
+      "@repositories/*": ["src/repositories/*"]
+    },
+    "target": "es2020",
+    "module": "commonjs",
+    "outDir": "dist",
+    "esModuleInterop": true,
+    "strict": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
+}

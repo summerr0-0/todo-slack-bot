@@ -1,0 +1,22 @@
+{
+  "name": "study-bot",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "esbuild src/handlers/님 --bundle --platform=node --outfile=dist/handler.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.485.0",
+    "@aws-sdk/lib-dynamodb": "^3.485.0",
+    "@aws-sdk/types": "^3.485.0",
+    "@slack/web-api": "^6.10.0",
+    "aws-lambda": "^1.0.7"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.130",
+    "@types/node": "^20.10.5",
+    "esbuild": "^0.24.2",
+    "serverless-offline": "^14.4.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}

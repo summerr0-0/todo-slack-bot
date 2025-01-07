@@ -1,0 +1,73 @@
+service: study-bot
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ap-northeast-2
+  environment:
+    DYNAMO_ACCESS_KEY_ID: ${env:DYNAMO_ACCESS_KEY_ID}
+    DYNAMO_SECRET_ACCESS_KEY: ${env:DYNAMO_SECRET_ACCESS_KEY}
+    SLACK_BOT_TOKEN: ${env:SLACK_BOT_TOKEN}
+    DYNAMODB_TABLE: ${self:service}-${sls:stage}
+  deploymentBucket:
+    name: podo-serverless-deployment-bucket
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource: !GetAtt StudyTable.Arn
+
+functions:
+  study:
+    handler: src/handlers/study.handler
+    events:
+      - http:
+          path: /slack/study
+          method: post
+          cors: true
+
+  interactivity:
+    handler: src/handlers/studyInteractivity.handler
+    events:
+      - http:
+          path: /slack/interactivity
+          method: post
+          cors: true
+
+  status:
+    handler: src/handlers/status.handler
+    events:
+      - http:
+          path: /slack/status
+          method: post
+          cors: true
+
+#cloudformation
+resources:
+  Resources:
+    StudyTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.DYNAMODB_TABLE}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: pk
+            AttributeType: S
+        KeySchema:
+          - AttributeName: pk
+            KeyType: HASH
+
+plugins:
+  - serverless-offline
+
+custom:
+  esbuild:
+    bundle: true
+    minify: false
