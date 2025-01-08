@@ -118,10 +118,13 @@ export const handler = async (event: APIGatewayProxyEvent) => {
             // DB에 저장
             const repository = new StudyRepository();
             const studyService = new StudyService(repository);
+            const userName = userInfo.user?.profile?.display_name || userInfo.user?.profile?.first_name || '';
             await studyService.recordStudy({
-                userId: payload.user.id,
-                date,
-                tags
+                pk: date,
+                sk: payload.user.id,
+                username: userName,
+                tags: tags,
+                timestamp: Date.now()
             });
 
             let blocks: any[] = [
@@ -129,7 +132,7 @@ export const handler = async (event: APIGatewayProxyEvent) => {
                     type: 'section',
                     text: {
                         type: 'mrkdwn',
-                        text: `*${userInfo.user?.profile?.display_name}님의 ${date} 인증이 완료되었습니다!*\n\n*태그:*\n${tags.join('\n')}`
+                        text: `*${userName}님의 ${date} 인증이 완료되었습니다!*\n\n*태그:*\n${tags.join('\n')}`
                     }
                 }
             ];
